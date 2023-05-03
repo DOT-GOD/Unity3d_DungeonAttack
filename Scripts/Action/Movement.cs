@@ -9,14 +9,13 @@ public class Movement : MonoBehaviour, IEnd
     float _maxspeed = 5.0f;
 
     [SerializeField]
-    NavMeshAgent _agent;
+    NavMeshAgent _agent;                           // 가지고 있는 컴포넌트 자동할당
 
-    Ray _ray;
+    Ray _ray;                                      
 
-    Animator _animator;
-
-    ActionManager _actionManager = null;
-    HealthPoint _healthPoint = null;
+    Animator _animator;                            // 가지고 있는 컴포넌트 자동할당
+    ActionManager _actionManager = null;           // 가지고 있는 컴포넌트 자동할당
+    HealthPoint _healthPoint = null;               // 가지고 있는 컴포넌트 자동할당
 
     private void Awake()
     {
@@ -29,6 +28,7 @@ public class Movement : MonoBehaviour, IEnd
     
     private void Update()
     {
+        // 사망시 내비게이션 에이전트 비활성화
         if (_agent != null)
         {
             _agent.enabled = !_healthPoint.IsDead;
@@ -41,12 +41,14 @@ public class Movement : MonoBehaviour, IEnd
     }
     private void UpdateAnimator()
     {
+        // 에이전트 위치로 객체 이동
         Vector3 velocity = _agent.velocity;
         Vector3 local = this.transform.InverseTransformDirection(velocity);
 
         _animator.SetFloat("MoveSpeed", local.z);
     }
 
+    // 이동 시작
     public void Begin(Vector3 dest, float speedFraction)
     {
         _actionManager.StartAction(this);
@@ -54,6 +56,7 @@ public class Movement : MonoBehaviour, IEnd
         To(dest, speedFraction);
     }
 
+    // 목표물 및 속도 지정
     public void To(Vector3 dest, float speedFraction)
     {
         if (_agent != null && _agent.enabled)
@@ -64,6 +67,7 @@ public class Movement : MonoBehaviour, IEnd
         }
     }
 
+    // 정지
     public void End()
     {
         if (_agent != null && _agent.enabled)

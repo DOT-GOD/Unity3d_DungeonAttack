@@ -10,7 +10,7 @@ public enum ENUM_TriggerType
 public class Trigger : MonoBehaviour
 {
     [SerializeField]
-    public ENUM_TriggerType ENUM_TriggerType = ENUM_TriggerType.Trigger_Bool;
+    public ENUM_TriggerType _triggerType = ENUM_TriggerType.Trigger_Bool;        // 지정필요 : 트리거 유형(bool,GameObject)
 
     public bool triggerBool = false;
     public GameObject triggerObject = null;
@@ -29,7 +29,7 @@ public class Trigger : MonoBehaviour
     {
         if (other.tag != "Player") return;
 
-        switch (ENUM_TriggerType)
+        switch (_triggerType)
         {
             case ENUM_TriggerType.Trigger_Bool:
                 if(triggerBool == false)

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+//싱글톤 관리용
 public class SingletonManager : MonoBehaviour
 {
     public static SingletonManager instance = null;

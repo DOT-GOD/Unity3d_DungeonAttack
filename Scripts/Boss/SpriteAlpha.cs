@@ -5,33 +5,33 @@ using UnityEngine;
 public class SpriteAlpha : MonoBehaviour
 {
     [SerializeField]
-    public GameObject shooter = null;
+    public GameObject shooter = null;                  //지정필요 : 슈터 프리팹
 
     [SerializeField]
     [Range(0.0f, 1.0f)]
-    public float alpha = 0.2f;
+    public float alpha = 0.2f;                         //지정필요 : 공격범위 원 색깔
 
     [SerializeField]
     [Range(0.0f, 5.0f)]
-    public float delay = 0.0f;
+    public float delay = 0.0f;                         //지정필요 : 원이 최대크기가 되는데 걸리는 시간
 
     [SerializeField]
     [Range(5.0f, 100.0f)]
-    public float areaSize = 10.0f;
+    public float areaSize = 10.0f;                     //지정필요 : 공격범위 원 최대크기
 
     [SerializeField]
-    public bool isInner = false;
+    public bool isInner = false;                       //지정필요 : 점점 커지는 원인지 여부
 
     [SerializeField]
     [Range(0.0f, 20.0f)]
-    public float _damage = 5.0f;
+    public float _damage = 5.0f;                       //지정필요 : 공격피해량
 
-    private float areaScale = 0.0f;
-    private float currentTime = 0.0f;
-    private HealthPoint _target = null;
+    private float areaScale = 0.0f;                    //점점 커지는 원일 경우 자동 증가
+    private float currentTime = 0.0f;                  //시간경과 체크용
+    private HealthPoint _target = null;                //공격타겟 컴포넌트 자동할당
 
-    bool damaged = false;
-    bool particlePlayed = false;
+    bool damaged = false;                              //중복데미지 방지용
+    bool particlePlayed = false;                       //파티클 중복재생 방지용
 
     void Start()
     {

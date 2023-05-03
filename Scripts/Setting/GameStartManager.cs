@@ -4,22 +4,22 @@ using UnityEngine;
 
 public class GameStartManager : MonoBehaviour
 {
-    private GameObject _jsonManager;
+    private GameObject _jsonManager;                         //jsonManager자동할당
 
-    public GameObject _player;
+    public GameObject _player;                               //Player태그로 자동할당
 
-    public GameObject _restartMenu;
+    public GameObject _restartMenu;                          //지정필요 : 재시작버튼
 
-    public GameObject _bull;
-    public GameObject _vampire;
-    public GameObject _skeleton;
+    public GameObject _bull;                                 //지정필요 : 보스 프리팹
+    public GameObject _vampire;                              //지정필요 : 중간보스 프리팹
+    public GameObject _skeleton;                             //지정필요 : 해골 프리팹
 
-    public GameObject _spawnPointBoss1;
-    public GameObject _spawnPointMiddleBoss;
-    public GameObject[] _spawnPointGroup;
+    public GameObject _spawnPointBoss1;                      //지정필요 : 보스 스폰포인트
+    public GameObject _spawnPointMiddleBoss;                 //지정필요 : 중간보스 스폰포인트
+    public GameObject[] _spawnPointGroup;                    //몬스터 SpawnPoint 태그 자동할당
 
-    private GameObject[] _monsterGroup = null;
-    private GameObject[] _monsterSpawned = null;
+    //private GameObject[] _monsterGroup = null;               
+    private GameObject[] _monsterSpawned = null;             //스폰된 몬스터
 
 
     private JsonManager tempJson;
@@ -51,12 +51,19 @@ public class GameStartManager : MonoBehaviour
         }
     }
 
-    void MonsterRespawn()
+    private void MonsterRespawn()
     {
-        //_monsterGroup = null;
-        if (_monsterGroup == null)
-            _monsterGroup = GameObject.FindGameObjectsWithTag("SpawnPoint");
+        ////_monsterGroup = null;
+        //if (_monsterGroup == null)
+        //    _monsterGroup = GameObject.FindGameObjectsWithTag("SpawnPoint");
 
+        SkeletonRespawn();
+        BossRespawn();
+        MiddleBossRespawn();
+    }
+
+    private void SkeletonRespawn()
+    {
         //이미 소환된 몬스터 제거
         _monsterSpawned = GameObject.FindGameObjectsWithTag("Monster");
 
@@ -72,17 +79,10 @@ public class GameStartManager : MonoBehaviour
             tempMonster = GameObject.Instantiate(_skeleton, _spawnPointGroup[i].transform.position, Quaternion.identity);
             tempMonster.transform.rotation = _spawnPointGroup[i].transform.rotation;
         }
-
-        //보스가 살아있을 때만 작동
-        //if (_bull != null)
-        //{
-        //    if (_bull.GetComponent<HealthPoint>()._value > 0)
-        //    {
-        //        _bull.GetComponent<HealthPoint>()._value = 100;
-        //        _bull.GetComponent<Boss1Pattern>().isStart = false;
-        //    }
-        //}
-
+    }
+    private void BossRespawn()
+    {
+        //보스 스폰
         GameObject tempBoss1;
         tempBoss1 = GameObject.Instantiate(_bull, _spawnPointBoss1.transform.position, Quaternion.identity);
         tempBoss1.SetActive(false);
@@ -93,17 +93,11 @@ public class GameStartManager : MonoBehaviour
         _bull.GetComponent<HealthPoint>()._value = 100;
         _bull.GetComponent<Boss1Pattern>().isStart = false;
         tempBoss1.SetActive(true);
+    }
+    private void MiddleBossRespawn()
+    {
 
-        //중간보스가 살아있을 때만 작동
-        //if (_vampire != null)
-        //{
-        //    if (_vampire.GetComponent<HealthPoint>()._value > 0)
-        //    {
-        //        _vampire.GetComponent<HealthPoint>()._value = 50;
-        //        _vampire.transform.position = _spawnPointMiddleBoss.transform.position;
-        //    }
-        //}
-
+        //중간보스 스폰
         GameObject tempMiddleBoss;
         tempMiddleBoss = GameObject.Instantiate(_vampire, _spawnPointMiddleBoss.transform.position, Quaternion.identity);
         tempMiddleBoss.SetActive(false);
@@ -112,7 +106,6 @@ public class GameStartManager : MonoBehaviour
             _spawnPointMiddleBoss.transform.eulerAngles.y,
             _spawnPointMiddleBoss.transform.eulerAngles.z);
         tempMiddleBoss.SetActive(true);
-
     }
 
     public void RestartGame()

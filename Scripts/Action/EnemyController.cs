@@ -9,32 +9,32 @@ public class EnemyController : MonoBehaviour
     float _searchRange = 5.0f;
 
     [SerializeField]
-    GameObject _player = null;
+    GameObject _player = null;                          // Player 태그 자동할당
 
-    Attack _attack = null;
-    HealthPoint _healthPoint = null;
-    Movement _movement = null;
-    ActionManager _actionManager = null;
+    Attack _attack = null;                              // 가지고 있는 컴포넌트 자동할당
+    HealthPoint _healthPoint = null;                    // 가지고 있는 컴포넌트 자동할당
+    Movement _movement = null;                          // 가지고 있는 컴포넌트 자동할당
+    ActionManager _actionManager = null;                // 가지고 있는 컴포넌트 자동할당
 
     [SerializeField]
-    WayPoint _wayPoint = null;
+    WayPoint _wayPoint = null;                          // 지정필요 : 웨이포인트 오브젝트
     int _currWaypointIndex = 0;
 
     [SerializeField]
-    float _waypointDistance = 1.0f;
+    float _waypointDistance = 1.0f;                     // 지정필요 : 웨이포인트와의 거리(값보다 가까우면 도착으로 간주)
 
-    Vector3 _initPosition;
-
-    [SerializeField]
-    float _waitTime = 5.0f;
-    float _foundPlayerLastTime = Mathf.Infinity;
+    Vector3 _initPosition;                              // 현재 위치 자동할당
 
     [SerializeField]
-    float _dwellTime = 2.0f;
+    float _waitTime = 5.0f;                             // 지정필요 : 추적시간(미탐지 시간이 지정값보다 길어지면 정찰실행)
+    float _foundPlayerLastTime = Mathf.Infinity;        // 마지막으로 플레이어가 탐지된 시각 
+
+    [SerializeField]
+    float _dwellTime = 2.0f;                            // 지정필요 : 웨이포인트 도착 후 대기시간
     float _arrivedAtWaypoint = Mathf.Infinity;
 
     [SerializeField, Range(0, 1)]
-    float _patrolSpeedFraction = 0.2f;
+    float _patrolSpeedFraction = 0.3f;                  // 지정필요 : 정찰속도(0~1f)
 
 
     private void Awake()
@@ -64,6 +64,7 @@ public class EnemyController : MonoBehaviour
         //    Debug.Log(this.gameObject.name + "/" + temp.ToString());
         //}
 
+        // 플레이어 사망시 이하 실행중지
         if (_healthPoint.IsDead) return;
 
         if(IsinRange())
@@ -72,17 +73,19 @@ public class EnemyController : MonoBehaviour
         //if (_attack.CanAttack(_player))
         //    Debug.Log(this.gameObject.name + "공격가능상태");
 
+        // 공격 가능시 공격
         if (IsinRange() && _attack.CanAttack(_player))
         {
             Debug.Log(this.gameObject.name + "공격 가능");
-            //_attack.Begin(_player);
             Attack();
         }
+        // 공격 불가능하면 대기시간 동안 정지
         else if (_foundPlayerLastTime < _waitTime)
         {
             _actionManager.StopAction();
             //Debug.Log("Wait" + _foundPlayerLastTime);
         }
+        // 공격 불가능하면 대기시간 이후 정찰
         else
         {
             //_attack.End();
@@ -100,8 +103,10 @@ public class EnemyController : MonoBehaviour
     {
         //웨이포인트가 없을 경우 첫지점으로 이동
         Vector3 next = _initPosition;
+
         if (_wayPoint != null)
         {
+            // 출발시간 초기화 및 다음 웨이포인트 할당
             if (IsNearWaypoint() == true)
             {
                 _arrivedAtWaypoint = 0.0f;
@@ -111,19 +116,22 @@ public class EnemyController : MonoBehaviour
                 // 정찰 속도 랜덤
                 //_patrolSpeedFraction = Random.Range(0.2f, 1.0f);
 
-                // 정찰 속도 일정
-                _patrolSpeedFraction = 0.3f;
+                // 정찰 속도 일정(변수 선언시 설정됨)
+                //_patrolSpeedFraction = 0.3f;
 
             }
 
             next = GetCurrentWaypoint();
         }
+        // 도착 후 대기
         if (_arrivedAtWaypoint > _dwellTime)
         {
+            //다음 지점으로 정찰 실행
             _movement.Begin(next, _patrolSpeedFraction);
         }
     }
 
+    // 객체와 웨이포인트 간의 거리가 _waypointDistance보다 좁으면 true값 반환
     private bool IsNearWaypoint()
     {
         Vector2 point = new Vector2(this.transform.position.x, this.transform.position.z);
@@ -132,11 +140,13 @@ public class EnemyController : MonoBehaviour
         return Vector2.Distance(point, waypoint) < _waypointDistance;
     }
 
+    // 현재 웨이포인트 위치값 반환
     private Vector3 GetCurrentWaypoint()
     {
         return _wayPoint.GetWaypoint(_currWaypointIndex);
     }
 
+    // 탐지 범위 내에 타겟(플레이어)가 있다면 true값 반환
     public bool IsinRange()
     {
         Vector2 targetPoint = new Vector2(_player.transform.position.x, _player.transform.position.z);
@@ -152,6 +162,7 @@ public class EnemyController : MonoBehaviour
         _attack.Begin(_player);
     }
 
+    // 최초 위치로 복귀
     private void Return()
     {
         _movement.Begin(_initPosition, _patrolSpeedFraction);
@@ -170,6 +181,7 @@ public class EnemyController : MonoBehaviour
         //Gizmos.DrawWireCube(this.transform.position, new Vector3(3, 3, 3));
     }
 
+    // 선택되면 구형으로 탐지범위 기즈모 표시
     private void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.green;

@@ -4,9 +4,9 @@ using UnityEngine;
 
 public class BGMManager : MonoBehaviour
 {
-    public GameObject[] _bgmList;
-    public int _bgmNum = 0;
-    private int _curNum = 0;
+    public GameObject[] _bgmList;                //지정필요 : BGM 사운드
+    public int _bgmNum = 0;                      //재생 요청된 BGM
+    private int _curNum = 0;                     //현재 재생중인 BGM
 
     void Start()
     {

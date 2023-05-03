@@ -20,6 +20,7 @@ public class SetVolume : MonoBehaviour
     {
     }
 
+    //슬라이더로 볼륨 조절
     public void SetLevel(float sliderVol)
     {
         if (_volumeType == 1)

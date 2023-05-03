@@ -4,11 +4,7 @@ using UnityEngine;
 
 public class CircleDestroy : MonoBehaviour
 {
-    void Start()
-    {
-        
-    }
-
+    //보스 공격범위 원 제거용
     void Update()
     {
         if (this.transform.childCount == 0)

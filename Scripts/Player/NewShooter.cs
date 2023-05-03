@@ -8,10 +8,9 @@ public class NewShooter : MonoBehaviour
 
     [SerializeField]
     [Range(0.1f,10.0f)]
-    public float fireDelay = 3.0f;
+    public float fireDelay = 3.0f;                 //지정필요 : 공격 딜레이
 
-    private float remainDelay = 0.0f;
-    private int ShooterNum = 0;
+    private float remainDelay = 0.0f;              //남은딜레이
 
     void Update()
     {
@@ -30,10 +29,8 @@ public class NewShooter : MonoBehaviour
     // 플레이어 시점방향으로 투사체가 휘는 상황을 방지하기 위해 새로운 사수 오브젝트 생성
     public void ShootFire()
     {
-        if(remainDelay > 0)
-        {
-        }
-        else
+        //생성딜레이가 0이하일 때
+        if(remainDelay <= 0)
         {
             GameObject tempShooter;
             tempShooter = GameObject.Instantiate(shooter, this.transform.position, Quaternion.identity);

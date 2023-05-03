@@ -14,24 +14,21 @@ public class TrapWall : MonoBehaviour
 
     [SerializeField]
     [Range(0.1f, 20.0f)]
-    public float trapDelay = 2.0f;
+    public float trapDelay = 2.0f;                          //지정필요 : 움직이는 벽 이동시간
 
     [SerializeField]
     [Range(-50.0f, 50.0f)]
-    public float movingDistance = 4.0f;
+    public float movingDistance = 4.0f;                     //지정필요 : 이동거리
 
-    public ENUM_MovingDirection _direction;
+    public ENUM_MovingDirection _direction;                 //지정필요 : 진행방향
 
-    private float currentTime = 0.0f;
-    private float countTime = 0.0f;
+    private float currentTime = 0.0f;                       //경과시간 체크용
 
-    private Vector3 startPosition;
 
     void Start()
     {
         // 함정 트리거(ex.핏자국)에 충돌스크립트 추가
         trapTrigger.AddComponent<TrapTrigger>();
-        startPosition = this.transform.position;
     }
 
     void Update()
@@ -42,9 +39,10 @@ public class TrapWall : MonoBehaviour
 
             // trapDelay 시간만큼 벽 이동후 정지
             if (currentTime > trapDelay) return;
-
+            
             float tempDistance = (movingDistance * Time.deltaTime) / trapDelay;
 
+            //벽 이동방향체크
             switch (_direction)
             {
                 case ENUM_MovingDirection.X:

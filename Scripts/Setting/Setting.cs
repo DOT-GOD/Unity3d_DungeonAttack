@@ -4,17 +4,9 @@ using UnityEngine;
 
 public class Setting : MonoBehaviour
 {
-    public GameObject _controlButton;
-    public GameObject _settingWindow;
-    public GameObject _settingButton;
-
-    void Start()
-    {
-    }
-
-    void Update()
-    {
-    }
+    public GameObject _controlButton;             //지정필요 : 컨트롤버튼그룹(이동,시점,대쉬,공격)
+    public GameObject _settingWindow;             //지정필요 : 설정메뉴
+    public GameObject _settingButton;             //지정필요 : 설정버튼
 
     public void ActiveSettingWindow()
     {

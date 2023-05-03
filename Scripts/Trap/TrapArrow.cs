@@ -5,16 +5,16 @@ using UnityEngine;
 
 public class TrapArrow : MonoBehaviour
 {
-    public GameObject arrow;
-    public GameObject trapTrigger;
-    public GameObject stopTrigger;
-    public GameObject[] trapShooter;
+    public GameObject arrow;                      //지정필요 : 화살프리팹
+    public GameObject trapTrigger;                //지정필요 : 함정발동 트리거
+    public GameObject stopTrigger;                //지정필요 : 함정정지 트리거
+    public GameObject[] trapShooter;              //지정필요 : 화살발사구
 
     [SerializeField]
     [Range(0.1f, 5.0f)]
-    public float trapDelay = 2.0f;
+    public float trapDelay = 2.0f;                //지정필요 : 화살발사 딜레이
 
-    private float currentTime = 0.0f;
+    private float currentTime = 0.0f;             //시간경과체크용
 
     void Start()
     {

@@ -4,18 +4,20 @@ using UnityEngine;
 using LitJson;
 using System.IO;
 
-
 public class SaveData
 {
     public int playerHp;
     public int CheckPoint;
 
+    //데이터 저장 양식
     public SaveData(int hp, int check)
     {
         playerHp = hp;
         CheckPoint = check;
     }
 }
+
+
 public class JsonManager : MonoBehaviour
 {
     public GameObject _player = null;
@@ -39,7 +41,6 @@ public class JsonManager : MonoBehaviour
 
         _player = GameObject.FindWithTag("Player");
 
-        //int tempHp = (int)_player.GetComponent<HealthPoint>()._value;
         int tempHp = 50;
         int checkPoint = num;
         SaveData saveData = new SaveData(tempHp, checkPoint);
@@ -48,14 +49,17 @@ public class JsonManager : MonoBehaviour
         JsonData saveGameJson = JsonMapper.ToJson(saveData);
 
         //dataPath asset폴더에 저장(읽기전용)
-        //File.WriteAllText(Application.dataPath
-        //    + "/Save/gameData.json"
-        //    , saveGameJson.ToString());
-        //persistentDataPath appdata에 저장(안드로이드)(읽기쓰기 둘 다 가능)
-        //File.WriteAllText(Application.persistentDataPath
-        //    + "/Save/gameData.json"
-        //    , saveGameJson.ToString());
+        /*
+        File.WriteAllText(Application.dataPath
+            + "/Save/gameData.json"
+            , saveGameJson.ToString());
+        persistentDataPath appdata에 저장(안드로이드)(읽기쓰기 둘 다 가능)
+        File.WriteAllText(Application.persistentDataPath
+            + "/Save/gameData.json"
+            , saveGameJson.ToString());
+        */
 
+        //Appdata폴더에 저장(읽기쓰기 둘 다 가능)
         //폴더생성
         if (!Directory.Exists(Application.persistentDataPath + "/Save"))
             Directory.CreateDirectory(Application.persistentDataPath + "/Save");
@@ -72,9 +76,10 @@ public class JsonManager : MonoBehaviour
         //Debug.Log("불러오기");
 
         //dataPath asset폴더에 저장
-        //persistentDataPath appdata에 저장(안드로이드)
         //string JsonString = File.ReadAllText(Application.dataPath
         //                                        + "/Save/gameData.json");
+
+        //persistentDataPath appdata에 저장(안드로이드)
         string JsonString = File.ReadAllText(Application.persistentDataPath
             + "/Save/gameData.json");
 
@@ -82,10 +87,6 @@ public class JsonManager : MonoBehaviour
 
         // 문자를 세이브데이터로 전환
         JsonData gameData = JsonMapper.ToObject(JsonString);
-
-        //Debug.Log(gameData["playerHp"].ToString());
-        //Debug.Log(gameData["CheckPoint"].ToString());
-
 
         // json파일의 string을 int로 변환해서 저장
 
@@ -96,13 +97,6 @@ public class JsonManager : MonoBehaviour
         int checkPoint = int.Parse(tempString2);
         SaveData saveData = new SaveData(tempHp, checkPoint);
 
-        //Debug.Log(saveData.playerHp);
-        //Debug.Log(saveData.CheckPoint);
-
-        //for (int i = 0; i < gameData.Count; i++)
-        //{
-        //}
-
         // 플레이어 오브젝트를 다시 생성하는 방식
         //GameObject tempPlayer;
         //tempPlayer = GameObject.Instantiate(_playerPrefab, _playerSpawnPoint[checkPoint].transform.position, Quaternion.identity);
@@ -111,8 +105,6 @@ public class JsonManager : MonoBehaviour
         // 비활성화된 플레이어 오브젝트 활성화하는 방식
         if (_player == null)
             _player = GameObject.FindWithTag("Player");
-        //_player.gameObject.SetActive(false);
-
         _player.gameObject.SetActive(false);
 
         HealthPoint _hp;
@@ -133,6 +125,7 @@ public class JsonManager : MonoBehaviour
 
     }
 
+    //세이브지점을 0번으로
     public void ResetGame()
     {
         Save(0);

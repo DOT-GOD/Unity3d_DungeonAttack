@@ -9,23 +9,23 @@ public class Attack : MonoBehaviour, IEnd
 
     [SerializeField]
     [Range(1.0f, 30.0f)]
-    float _attackRange = 1.0f;
+    float _attackRange = 1.0f;                      // 지정필요 : 자동공격 가능 범위
 
     [SerializeField]
     [Range(1.0f, 20.0f)]
-    float _attackDelay = 2.0f;
+    float _attackDelay = 2.0f;                      // 지정필요 : 자동공격 지연시간
 
     [SerializeField]
     [Range(1.0f, 20.0f)]
     float _attackDamage = 5.0f;
+     
+    float _sinceLastAttack = 0.0f;                  // 지정필요 : 자동공격 피해량
 
-    float _sinceLastAttack = 0.0f;
-
-    HealthPoint _target = null;
-    Movement _movement = null;
-    ActionManager _actionManager = null;
-    Animator _animator = null;
-    HealthPoint _healthPoint = null;
+    HealthPoint _target = null;                     // 자동할당
+    Movement _movement = null;                      // 자동할당(가지고 있는 컴포넌트)
+    ActionManager _actionManager = null;            // 자동할당(가지고 있는 컴포넌트)
+    Animator _animator = null;                      // 자동할당(가지고 있는 컴포넌트)
+    HealthPoint _healthPoint = null;                // 자동할당(가지고 있는 컴포넌트)
 
 
     private void Awake()
@@ -38,6 +38,7 @@ public class Attack : MonoBehaviour, IEnd
 
     void Start()
     {
+        // 처음에는 공격 딜레이가 걸리지 않게 설정
         _sinceLastAttack = _attackDelay;
     }
 
@@ -47,20 +48,26 @@ public class Attack : MonoBehaviour, IEnd
 
         _sinceLastAttack += Time.deltaTime;
 
+        // 타겟이 없을 경우 이하 실행중지
         if (_target == null) return;
-
+        
+        // 타겟이 사망시 어택 애니메이션 중지(트리거 파라미터 리셋)
         if (_target.IsDead == true)
         {
             _animator.ResetTrigger("Attack");
             return;
         }
 
+        // 객체 사망시 이하 실행 중지
         if (_healthPoint.IsDead) return;
 
+
+        // 공격 범위 밖이면 이동
         if (IsinRange() == false)
         {
             _movement.To(_target.transform.position, 1.0f);
         }
+        // 공격 범위 안이면 이동 정지 및 공격
         else
         {
             PlayAnimation();
@@ -69,6 +76,7 @@ public class Attack : MonoBehaviour, IEnd
         }
     }
 
+    // 타겟이 체력이 존재하면서 사망하지 않았을 때 true값 반환
     public bool CanAttack(GameObject target)
     {
         if (target == null)
@@ -103,6 +111,7 @@ public class Attack : MonoBehaviour, IEnd
         _animator.SetTrigger("StopAttack");
     }
 
+    // 객체와 타겟간 거리가 공격 범위 이내라면 true값 반환
     private bool IsinRange()
     {
         Vector2 targetPoint = new Vector2(_target.transform.position.x, _target.transform.position.z);
@@ -114,7 +123,6 @@ public class Attack : MonoBehaviour, IEnd
     private void Hit()
     {
         Debug.Log("공격이벤트");
-
         if (_target == null) return;
 
         Debug.Log("타겟있음");
@@ -142,6 +150,7 @@ public class Attack : MonoBehaviour, IEnd
         if (_sinceLastAttack < 1)
             this.transform.LookAt(_target.transform);
 
+        // 공격 딜레이가 끝나기 전이면 이하 실행중지
         if (_sinceLastAttack < _attackDelay) return;
 
         PlayTrigger();
@@ -149,6 +158,7 @@ public class Attack : MonoBehaviour, IEnd
         _sinceLastAttack = 0.0f;
     }
 
+    // 공격 트리거 활성화
     private void PlayTrigger()
     {
         _animator.ResetTrigger("StopAttack");
